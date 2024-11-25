@@ -76,6 +76,16 @@ export const translations = {
         }
       },
       vip: "VIP"
+    },
+    admin: {
+      dashboard: "Admin Dashboard",
+      products: "Products",
+      addProduct: "Add Product",
+      product: "Product",
+      price: "Price",
+      featured: "Featured",
+      actions: "Actions",
+      confirmDelete: "Are you sure you want to delete this product?",
     }
   },
   de: {
@@ -155,6 +165,16 @@ export const translations = {
         }
       },
       vip: "VIP"
+    },
+    admin: {
+      dashboard: "Admin Dashboard",
+      products: "Produkte",
+      addProduct: "Produkt hinzufügen",
+      product: "Produkt",
+      price: "Preis",
+      featured: "Vorgestellt",
+      actions: "Aktionen",
+      confirmDelete: "Sind Sie sicher, dass Sie dieses Produkt löschen möchten?",
     }
   },
   es: {
@@ -234,6 +254,16 @@ export const translations = {
         }
       },
       vip: "VIP"
+    },
+    admin: {
+      dashboard: "Admin Dashboard",
+      products: "Productos",
+      addProduct: "Agregar producto",
+      product: "Producto",
+      price: "Precio",
+      featured: "Destacado",
+      actions: "Acciones",
+      confirmDelete: "¿Estás seguro de que quieres eliminar este producto?",
     }
   },
   fr: {
@@ -313,6 +343,16 @@ export const translations = {
         }
       },
       vip: "VIP"
+    },
+    admin: {
+      dashboard: "Admin Dashboard",
+      products: "Produits",
+      addProduct: "Ajouter un produit",
+      product: "Produit",
+      price: "Prix",
+      featured: "En vedette",
+      actions: "Actions",
+      confirmDelete: "Êtes-vous sûr de vouloir supprimer ce produit?",
     }
   },
   zh: {
@@ -392,6 +432,16 @@ export const translations = {
         }
       },
       vip: "会员"
+    },
+    admin: {
+      dashboard: "管理后台",
+      products: "产品管理",
+      addProduct: "添加产品",
+      product: "产品",
+      price: "价格",
+      featured: "首页显示",
+      actions: "操作",
+      confirmDelete: "确定要删除这个产品吗？",
     }
   }
 }

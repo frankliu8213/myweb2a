@@ -1,6 +1,6 @@
 'use client'
 
-import { use } from 'react'
+import { use, useEffect, useState } from 'react'
 import { FEATURED_PRODUCTS } from '../../data/products'
 import { useCart } from '../../context/CartContext'
 import { useLanguage } from '../../context/LanguageContext'
@@ -9,18 +9,7 @@ import Header from '../../components/layout/Header'
 import Footer from '../../components/layout/Footer'
 import ProductGallery from '../../components/features/ProductGallery'
 import RelatedProducts from '../../components/features/RelatedProducts'
-
-interface Product {
-  id: number
-  name: string
-  price: number
-  rating: number
-  image: string
-  description: string
-  specs: {
-    [key: string]: string
-  }
-}
+import type { Product } from '../../types'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -28,12 +17,80 @@ interface PageProps {
 
 export default function ProductPage({ params }: PageProps) {
   const { t } = useLanguage()
-  const resolvedParams = use(params)
-  const product = FEATURED_PRODUCTS.find(p => p.id === parseInt(resolvedParams.id))
   const { addItem } = useCart()
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
+  
+  // 使用 React.use() 来解包 params
+  const resolvedParams = use(params)
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        // 先从 API 获取所有产品
+        const response = await fetch('/api/products')
+        if (!response.ok) throw new Error('Failed to fetch')
+        const products = await response.json()
+        
+        // 查找指定 ID 的产品
+        const foundProduct = products.find((p: Product) => p.id === parseInt(resolvedParams.id))
+        
+        if (foundProduct) {
+          setProduct(foundProduct)
+        } else {
+          // 如果 API 中找不到，尝试从本地数据中查找
+          const localProduct = FEATURED_PRODUCTS.find(p => p.id === parseInt(resolvedParams.id))
+          if (localProduct) {
+            setProduct({
+              ...localProduct,
+              featured: localProduct.featured || false
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        // 如果 API 失败，尝试从本地数据中查找
+        const localProduct = FEATURED_PRODUCTS.find(p => p.id === parseInt(resolvedParams.id))
+        if (localProduct) {
+          setProduct({
+            ...localProduct,
+            featured: localProduct.featured || false
+          })
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProduct()
+  }, [resolvedParams.id])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0A0C0E]">
+        <Header />
+        <main className="pt-20">
+          <div className="max-w-7xl mx-auto px-4 py-12">
+            <div className="text-center text-white/60">Loading...</div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   if (!product) {
-    return <div>Product not found</div>
+    return (
+      <div className="min-h-screen bg-[#0A0C0E]">
+        <Header />
+        <main className="pt-20">
+          <div className="max-w-7xl mx-auto px-4 py-12">
+            <div className="text-center text-white">Product not found</div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
   }
 
   return (

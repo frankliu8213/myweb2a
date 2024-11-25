@@ -5,14 +5,42 @@ import ProductCard from './ProductCard'
 import { FEATURED_PRODUCTS } from '../../data/products'
 import { useLanguage } from '../../context/LanguageContext'
 import { ArrowRight, Crown, X } from 'lucide-react'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import type { Product } from '../../types'
 
 export default function ProductGrid() {
   const { t } = useLanguage()
   const [showMembership, setShowMembership] = useState(false)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // 显示前9个产品
-  const displayedProducts = FEATURED_PRODUCTS.slice(0, 9)
+  // 获取产品数据
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // 使用相对路径，避免环境变量问题
+        const response = await fetch('/api/products')
+        if (!response.ok) throw new Error('Failed to fetch')
+        const data = await response.json()
+        // 只显示标记为 featured 的产品
+        const featuredProducts = data.filter((product: Product) => product.featured)
+        setProducts(featuredProducts)
+      } catch (error) {
+        console.error('Error fetching products:', error)
+        // 如果 API 失败，使用本地数据并过滤
+        const defaultProducts = FEATURED_PRODUCTS.map(product => ({
+          ...product,
+          featured: product.featured || false
+        })) as Product[]
+        const featuredProducts = defaultProducts.filter(product => product.featured)
+        setProducts(featuredProducts)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const handleOpenMembership = useCallback(() => {
     setShowMembership(true)
@@ -21,6 +49,16 @@ export default function ProductGrid() {
   const handleCloseMembership = useCallback(() => {
     setShowMembership(false)
   }, [])
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-[#1A1D21]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center text-white/60">Loading...</div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="py-20 bg-[#1A1D21]">
@@ -48,7 +86,7 @@ export default function ProductGrid() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {displayedProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

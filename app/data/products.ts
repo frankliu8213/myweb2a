@@ -6,6 +6,7 @@ export const FEATURED_PRODUCTS = [
     rating: 4.8,
     image: "https://picsum.photos/id/252/800/600",
     description: "8K Mirrorless Camera with AI Enhancement",
+    featured: true,
     specs: {
       sensor: "Full-frame 61MP",
       processor: "X-Processor 5",
@@ -20,6 +21,7 @@ export const FEATURED_PRODUCTS = [
     rating: 4.9,
     image: "https://picsum.photos/id/240/800/600",
     description: "Professional Cinema Camera",
+    featured: true,
     specs: {
       sensor: "Super 35mm 8K",
       processor: "Cinema Pro II",
